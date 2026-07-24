@@ -4,6 +4,8 @@
 
 Audit tracked video trajectories for gravity, teleportation, object permanence, and collision response, then render the benchmark to MP4.
 
+![physicsvideo cover](demo/cover.png)
+
 ![physicsvideo workbench](demo/dashboard.png)
 
 ## What ships
