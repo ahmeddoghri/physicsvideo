@@ -1,0 +1,12 @@
+{
+  "name": "physicsvideo",
+  "tagline": "Physical-consistency benchmark for generated video",
+  "headline": "A realistic frame can still break the world.",
+  "summary": "Audit tracked video trajectories for gravity, teleportation, object permanence, and collision response, then render the benchmark to MP4.",
+  "accent": "#77dcff",
+  "topics": "video-generation,world-models,physical-ai,computer-vision,video-evaluation,opencv",
+  "sources": [
+    ["How Far Is Video Generation from World Model, ICML 2025", "https://proceedings.mlr.press/v267/kang25g.html"],
+    ["PhyCoBench", "https://arxiv.org/abs/2502.05503"]
+  ]
+}
