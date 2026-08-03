@@ -34,6 +34,28 @@ The benchmark contains a valid falling-ball control plus hover, teleport, disapp
 - [How Far Is Video Generation from World Model: A Physical Law Perspective, ICML 2025](https://proceedings.mlr.press/v267/kang25g.html)
 - [PhyCoBench](https://arxiv.org/abs/2502.05503)
 
+## Update: fixed a self-referential blind spot in teleport detection
+
+The teleport check compared a track's largest frame-to-frame jump against a
+threshold of `max(absolute_threshold, median(all steps in the track) * 6)`
+-- but that median included the very jump being tested. For a track with
+exactly one step (two tracked points), the threshold was necessarily at
+least 6x that single step, so it could **never** exceed its own threshold,
+no matter how large the jump.
+
+Verified directly: an object tracked at only two points, teleporting 1000
+units in a single frame, produced zero violations -- completely
+undetected, despite being the most extreme case of the exact failure mode
+this benchmark exists to catch.
+
+Fixed with a leave-one-out threshold: each step's permissiveness threshold
+is now derived only from the *other* steps in the track, never from
+itself. `tests/test_two_point_teleport.py` covers the extreme two-point
+case, a legitimate small two-point step (no false positive), a single
+extreme jump mid-track, and a demo-output regression check; the published
+demo numbers (4/4 violations detected, 0 false positives, 5/5 accuracy)
+are unaffected.
+
 ## Scope
 
 The checks operate on tracked trajectories. Appearance realism, deformable bodies, camera motion, occlusion semantics, and unobserved forces need richer task-specific evaluation.

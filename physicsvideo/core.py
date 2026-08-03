@@ -28,11 +28,22 @@ def _track_checks(track: dict, payload: dict, mode: str) -> list[dict]:
     if gaps and max(gaps) > int(payload.get("max_visibility_gap", 2)):
         violations.append({"code": "object_permanence_gap", "track": track["id"], "value": max(gaps)})
     steps = [math.dist(left[1:3], right[1:3]) for left, right in zip(points, points[1:])]
-    nonzero = [step for step in steps if step > 1e-9]
-    median_step = sorted(nonzero)[len(nonzero) // 2] if nonzero else 0.0
-    threshold = max(float(payload.get("teleport_absolute_threshold", 10.0)), median_step * 6)
-    if steps and max(steps) > threshold:
-        violations.append({"code": "teleport", "track": track["id"], "value": round(max(steps), 4)})
+    abs_threshold = float(payload.get("teleport_absolute_threshold", 10.0))
+    # Leave-one-out: a step's own permissiveness threshold must come from the
+    # OTHER steps in the track, never from itself. Deriving it from the full
+    # step list (including the step under test) makes a single extreme jump
+    # self-justifying -- a track with exactly one step (2 points) can never
+    # be flagged no matter how large that jump is, since threshold >= 6x the
+    # step itself.
+    teleport_step = None
+    for index, step in enumerate(steps):
+        others = [value for position, value in enumerate(steps) if position != index and value > 1e-9]
+        baseline = sorted(others)[len(others) // 2] if others else 0.0
+        step_threshold = max(abs_threshold, baseline * 6)
+        if step > step_threshold and (teleport_step is None or step > teleport_step):
+            teleport_step = step
+    if teleport_step is not None:
+        violations.append({"code": "teleport", "track": track["id"], "value": round(teleport_step, 4)})
     if mode == "ballistic" and len(points) >= 3:
         accelerations = []
         for first, second, third in zip(points, points[1:], points[2:]):
