@@ -13,7 +13,7 @@ Audit tracked video trajectories for gravity, teleportation, object permanence, 
 - Five-scenario benchmark with one clean control and four targeted failures
 - Gravity acceleration, teleport, visibility-gap, and declared-collision response checks
 - Actual OpenCV MP4 renderer for the committed scenario suite
-- CLI, JSON API, animated visual workbench, Docker, tests, and CI
+- CLI, JSON API, animated visual workbench, Docker, tests
 
 ## Run it end to end
 
