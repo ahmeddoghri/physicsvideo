@@ -1,5 +1,7 @@
 # physicsvideo
 
+[![tests](https://github.com/ahmeddoghri/physicsvideo/actions/workflows/tests.yml/badge.svg)](https://github.com/ahmeddoghri/physicsvideo/actions/workflows/tests.yml) [![case study](https://img.shields.io/badge/case%20study-adoghri.com-e0703e)](https://adoghri.com/project-61.html)
+
 **Physical-consistency benchmark for generated video.**
 
 Audit tracked video trajectories for gravity, teleportation, object permanence, and collision response, then render the benchmark to MP4.
