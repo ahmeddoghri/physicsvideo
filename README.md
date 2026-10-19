@@ -58,6 +58,25 @@ extreme jump mid-track, and a demo-output regression check; the published
 demo numbers (4/4 violations detected, 0 false positives, 5/5 accuracy)
 are unaffected.
 
+## Rates, not five hand-built cases
+
+Four of four on a curated fixture is an existence proof, not a rate.
+`python -m physicsvideo.sweep` generates ballistic trajectories with
+tracking noise, keeps half physically valid, and plants one fault in the
+rest:
+
+| | low noise (0.05) | high noise (0.4) |
+| --- | ---: | ---: |
+| false alarms on 100 clean clips | **0.0%** | **0.0%** |
+| gravity violation detected | 100% | 100% |
+| teleport detected | 100% | 100% |
+| object-permanence gap detected | 100% | 100% |
+
+Writing the generator surfaced a labelling trap worth naming: dropping
+frames from the *end* of a track is an object leaving the scene, not a
+permanence violation, and scoring it as one made the detector look 30%
+worse than it is. The generator now only plants interior gaps.
+
 ## Scope
 
 The checks operate on tracked trajectories. Appearance realism, deformable bodies, camera motion, occlusion semantics, and unobserved forces need richer task-specific evaluation.
